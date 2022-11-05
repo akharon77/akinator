@@ -1,0 +1,13 @@
+*.o
+*.out
+*.d
+*.dd
+*.log
+*.ii
+vgcore*
+*.asm
+*.bin
+*.png
+*.svg
+*.txt
+*.html
