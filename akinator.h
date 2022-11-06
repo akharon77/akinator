@@ -21,4 +21,6 @@ void AkinatorDtor    (Akinator *aktr);
 void AkinatorPredict (Akinator *aktr);
 void AkinatorCompare (Akinator *aktr, const char *obj1, const char *obj2);
 
+char GetAnsYesNo();
+
 #endif  // AKINATOR_H

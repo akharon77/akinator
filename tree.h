@@ -9,8 +9,8 @@ struct Node
     Node *right;
 };
 
-void TreeCtor(Tree *tree);
-void TreeDtor(Tree *tree);
+void TreeCtor(Node *tree);
+void TreeDtor(Node *tree);
 
 
 #undef  // TREE_H
