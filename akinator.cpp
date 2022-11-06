@@ -7,6 +7,7 @@
 #include "akinator.h"
 #include "iostr.h"
 #include "colors.h"
+//test
 
 const Option EXEC_OPTIONS[] = 
     {
