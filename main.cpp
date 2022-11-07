@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "akinator.h"
 
 int main(int argc, const char *argv[])
@@ -29,20 +30,22 @@ int main(int argc, const char *argv[])
     if (options[COMPARE_OPTION])
     {
         run_mode = COMPARE_OPTION;
+
+        ASSERT(options[COMPARE_OPTION] + 2 < argc);
         obj1     = argv[options[COMPARE_OPTION] + 1];
         obj2     = argv[options[COMPARE_OPTION] + 2];
     }
 
-    Akinator prec_tree = {};
-    AkinatorCtor(&prec_tree, db_filename);
+    Akinator aktr = {};
+    AkinatorCtor(&aktr, db_filename);
 
     switch (run_mode)
     {
         case PREDICT:
-            AkinatorPredict(&prec_tree);
+            AkinatorPredict(&aktr);
             break;
         case COMPARE:
-            AkinatorCompare(&prec_tree, obj1, obj2);
+            AkinatorCompare(&aktr, obj1, obj2);
             break;
         case HELP:
             OptionsPrintHelp();
@@ -51,7 +54,7 @@ int main(int argc, const char *argv[])
             printf(RED "Nothing to do" NORMAL);
     }
 
-    AkinatorDtor(&prec_tree);
+    AkinatorDtor(&aktr);
     
     return 0;
 }

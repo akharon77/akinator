@@ -15,11 +15,14 @@ enum OPTIONS
 extern const Option       EXEC_OPTIONS[];
 extern const size_t       N_EXEC_OPTIONS;
 
-void AkinatorCtor    (Akinator *aktr);
-void AkinatorDtor    (Akinator *aktr);
+void AkinatorCtor        (Akinator *aktr, const char *db_filename);
+void AkinatorDtor        (Akinator *aktr);
 
-void AkinatorPredict (Akinator *aktr);
-void AkinatorCompare (Akinator *aktr, const char *obj1, const char *obj2);
+void AkinatorPredict     (Akinator *aktr);
+void AkinatorCompare     (Akinator *aktr, const char *obj1, const char *obj2);
+
+void AkinatorPrintByPath (Node *node, Stack *stk);
+bool AkinatorFindObj     (Node *node, const char *str, Stack *stk);
 
 char GetAnsYesNo();
 
