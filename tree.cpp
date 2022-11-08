@@ -1,4 +1,8 @@
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "stack_debug.h"
 #include "tree.h"
 
 void TreeDtor(Node *vertex)
@@ -10,12 +14,11 @@ Node* TreeInsert(Node *anch, const char *str)
 {
     Node *new_node = NodeNew();
 
-
 }
 
 Node *NodeNew()
 {
-    Node *res = calloc(1, sizeof(Node));
+    Node *res = (Node*) calloc(1, sizeof(Node));
     ASSERT(res != NULL);
 
     *res = 
@@ -42,3 +45,7 @@ void NodeCtor(Node *node, const char *str)
         };
 }
 
+bool NodeIsLeaf(Node *node)
+{
+    return node->left == NULL && node->right == NULL;
+}

@@ -10,8 +10,11 @@ struct Node
     Node *right;
 };
 
-void TreeCtor(Node *tree);
-void TreeDtor(Node *tree);
+void   TreeCtor(Node *tree);
+void   TreeDtor(Node *tree);
+Node  *NodeNew();
+Node*  TreeInsert(Node *anch, const char *str);
+void   NodeCtor(Node *node, const char *str);
+bool NodeIsLeaf(Node *node);
 
-
-#undef  // TREE_H
+#endif  // TREE_H
