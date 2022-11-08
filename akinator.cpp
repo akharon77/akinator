@@ -34,82 +34,6 @@ void AkinatorCtor(Akinator *aktr, const char *db_filename, int *err)
 
 }
 
-void AkinatorParseText(Akinator *aktr, TextInfo *text)
-{
-    Stack stk_quot = {},
-          stk_pos  = {};
-
-    StackCtor(&stk_quot, 64);
-    StackCtor(&stk_stat, 64);
-
-    StackPush(&stk_pos, VERTEX_IN);
-    Node *vertex = aktr->root;
-
-    for (int32_t i = strchr(text.base, '{') - text.base + 1; i < text.size; ++i)
-    {
-        switch (text.base[i])
-        {
-            case '{':
-                switch (StacPop(&stk_pos))
-                {
-                    case VERTEX_IN:
-                        {
-                            StackPush(&stk_stat, VERTEX_LEFT);
-                            StackPush(&stk_stat, VERTEX_IN);
-
-                            Node *node  = NodeNew();
-                            node.ancstr = vertex;
-                            vertex.left = node;
-                            vertex      = node;
-                        }
-                        break;
-
-                    case VERTEX_LEFT:
-                        {
-                            StackPush(&stk_stat, VERTEX_RIGHT);
-                            StackPush(&stk_stat, VERTEX_IN);
-
-                            Node *node   = NodeNew();
-                            node.ancstr  = vertex;
-                            vertex.right = node;
-                            vertex       = node;
-                        }
-                        break;
-
-                    case VERTEX_RIGHT:
-
-                    default:
-                        break;
-                }
-                break;
-
-            case '"':
-                StackPush(&stk, i);
-                break;
-
-            case '}':
-                {
-                    int32_t quot_r = StackPop(&stk_quot);
-                    int32_t quot_l = StackPop(&stk_quot);
-
-                    vertex.str = strndup(text.base + i + 1, quot_r - quot_l - 1);
-                    vertex = vertex.ancstr;
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    StackDtor(&stk_quot);
-    StackDtor(&stk_pos);
-
-    TextInfoDtor(&text);
-
-    close(fd);
-}
-
 void AkinatorDtor(Akinator *aktr)
 {
 
@@ -223,7 +147,7 @@ void AkinatorPrintByPath(Node *node, Stack *stk)
     ASSERT(node != NULL);
     ASSERT(stk  != NULL);
 
-    while (!NodeIsLeaf(node))
+    while ( StakGetSize(&stk) > 0 && !NodeIsLeaf(node))
     {
         char *str = node->str;
 
@@ -286,3 +210,81 @@ bool AkinatorFindObj(Node *node, const char *str, Stack *stk)
 
     return false;
 }
+
+void AkinatorParseText(Akinator *aktr, TextInfo *text)
+{
+    Stack stk_quot = {},
+          stk_pos  = {};
+
+    StackCtor(&stk_quot, 64);
+    StackCtor(&stk_stat, 64);
+
+    StackPush(&stk_pos, VERTEX_IN);
+    Node *vertex = aktr->root;
+
+    for (int32_t i = strchr(text.base, '{') - text.base + 1; i < text.size; ++i)
+    {
+        switch (text.base[i])
+        {
+            case '{':
+                switch (StacPop(&stk_pos))
+                {
+                    case VERTEX_IN:
+                        {
+                            StackPush(&stk_stat, VERTEX_LEFT);
+                            StackPush(&stk_stat, VERTEX_IN);
+
+                            Node *node  = NodeNew();
+                            node.ancstr = vertex;
+                            vertex.left = node;
+                            vertex      = node;
+                        }
+                        break;
+
+                    case VERTEX_LEFT:
+                        {
+                            StackPush(&stk_stat, VERTEX_RIGHT);
+                            StackPush(&stk_stat, VERTEX_IN);
+
+                            Node *node   = NodeNew();
+                            node.ancstr  = vertex;
+                            vertex.right = node;
+                            vertex       = node;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+
+            case '"':
+                StackPush(&stk, i);
+                break;
+
+            case '}':
+                {
+                    StackPop(&stk_stat);
+
+                    int32_t quot_r = StackPop(&stk_quot);
+                    int32_t quot_l = StackPop(&stk_quot);
+
+                    vertex.str = strndup(text.base + i + 1, quot_r - quot_l - 1);
+                    vertex = vertex.ancstr;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    StackDtor(&stk_quot);
+    StackDtor(&stk_pos);
+
+    TextInfoDtor(&text);
+
+    close(fd);
+}
+
+
