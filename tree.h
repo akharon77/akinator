@@ -5,6 +5,7 @@ struct Node
 {
     char *str;
 
+    Node *ancstr;
     Node *left;
     Node *right;
 };

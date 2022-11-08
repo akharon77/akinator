@@ -4,16 +4,18 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+
 #include "akinator.h"
 #include "iostr.h"
 #include "stack.h"
 #include "colors.h"
-//test
 
 const Option EXEC_OPTIONS[] = 
     {
-        {"--db",        "-f",  DB_FILE_OPTION,       "use database from file (default: input.asm)"                          },
-        {"--help",        "-h",  HELP_OPTION,             "show help"                                               }
+        {"--db",      "-f",  DB_FILE_OPTION, "use database from file (default: input.asm)"},
+        {"--predict", "-p",  PREDICT_OPTION, "prediction mode"},
+        {"--compare", "-c",  COMPARE_OPTION, "comparison mode"},
+        {"--help",    "-h",  HELP_OPTION,    "show help"}
     };
  
 const size_t N_EXEC_OPTIONS = sizeof(EXEC_OPTIONS) / sizeof(Option);
@@ -26,7 +28,82 @@ void AkinatorCtor(Akinator *aktr, const char *db_filename, int *err)
     TextInfoCtor(&text);
 
     InputText   (&text, db_filename, err);
-    MarkOutText (&text);
+
+    AkinatorParseText(aktr, &text);
+
+
+}
+
+void AkinatorParseText(Akinator *aktr, TextInfo *text)
+{
+    Stack stk_quot = {},
+          stk_pos  = {};
+
+    StackCtor(&stk_quot, 64);
+    StackCtor(&stk_stat, 64);
+
+    StackPush(&stk_pos, VERTEX_IN);
+    Node *vertex = aktr->root;
+
+    for (int32_t i = strchr(text.base, '{') - text.base + 1; i < text.size; ++i)
+    {
+        switch (text.base[i])
+        {
+            case '{':
+                switch (StacPop(&stk_pos))
+                {
+                    case VERTEX_IN:
+                        {
+                            StackPush(&stk_stat, VERTEX_LEFT);
+                            StackPush(&stk_stat, VERTEX_IN);
+
+                            Node *node  = NodeNew();
+                            node.ancstr = vertex;
+                            vertex.left = node;
+                            vertex      = node;
+                        }
+                        break;
+
+                    case VERTEX_LEFT:
+                        {
+                            StackPush(&stk_stat, VERTEX_RIGHT);
+                            StackPush(&stk_stat, VERTEX_IN);
+
+                            Node *node   = NodeNew();
+                            node.ancstr  = vertex;
+                            vertex.right = node;
+                            vertex       = node;
+                        }
+                        break;
+
+                    case VERTEX_RIGHT:
+
+                    default:
+                        break;
+                }
+                break;
+
+            case '"':
+                StackPush(&stk, i);
+                break;
+
+            case '}':
+                {
+                    int32_t quot_r = StackPop(&stk_quot);
+                    int32_t quot_l = StackPop(&stk_quot);
+
+                    vertex.str = strndup(text.base + i + 1, quot_r - quot_l - 1);
+                    vertex = vertex.ancstr;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    StackDtor(&stk_quot);
+    StackDtor(&stk_pos);
 
     TextInfoDtor(&text);
 
@@ -65,8 +142,8 @@ void AkinatorPredict(Akinator *aktr)
     }
     else
     {
-        char obj     [128], 
-             property[128];
+        char obj     [MAX_STR_OBJ_LEN] = "", 
+             property[MAX_STR_OBJ_LEN] = "";
 
         printf("What's a pity! Please, tell me, who it was. It was ... ");
         scanf("%s", obj);
@@ -177,6 +254,8 @@ bool GetAnsYesNo()
                 return true;
             case 'n':
                 return false;
+            case '\n':
+                break;
             default:
                 printf(RED "Wrong answer. " NORMAL "Enter [y/n] ");
         }

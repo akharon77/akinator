@@ -20,9 +20,10 @@ Node *NodeNew()
 
     *res = 
         {
-            .str   = NULL,
-            .left  = NULL,
-            .right = NULL
+            .str    = NULL,
+            .ancstr = NULL,
+            .left   = NULL,
+            .right  = NULL
         };
 
     return res;
@@ -34,9 +35,10 @@ void NodeCtor(Node *node, const char *str)
 
     *node = 
         {
-            .str   = strdup(str),
-            .left  = NULL,
-            .right = NULL
+            .str    = strdup(str),
+            .ancstr = NULL,
+            .left   = NULL,
+            .right  = NULL
         };
 }
 
