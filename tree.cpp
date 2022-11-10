@@ -7,13 +7,28 @@
 
 void TreeDtor(Node *vertex)
 {
-    
+    ASSERT(vertex != NULL);
+
+    if (!NodeIsLeaf(vertex))
+    {
+        TreeDtor(vertex->left);
+        TreeDtor(vertex->right);
+    }
+
+    free(vertex->str);
 }
 
-Node* TreeInsert(Node *anch, const char *str)
+void NodeCtor(Node *node, const char *str)
 {
-    Node *new_node = NodeNew();
+    ASSERT(node != NULL);
 
+    *node = 
+        {
+            .str    = strdup(str),
+            .ancstr = NULL,
+            .left   = NULL,
+            .right  = NULL
+        };
 }
 
 Node *NodeNew()
@@ -30,19 +45,6 @@ Node *NodeNew()
         };
 
     return res;
-}
-
-void NodeCtor(Node *node, const char *str)
-{
-    ASSERT(node != NULL);
-
-    *node = 
-        {
-            .str    = strdup(str),
-            .ancstr = NULL,
-            .left   = NULL,
-            .right  = NULL
-        };
 }
 
 bool NodeIsLeaf(Node *node)

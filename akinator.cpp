@@ -25,7 +25,8 @@ const size_t N_EXEC_OPTIONS = sizeof(EXEC_OPTIONS) / sizeof(Option);
 
 void AkinatorCtor(Akinator *aktr, const char *db_filename, int *err)
 {
-    aktr->root = NodeNew();
+    aktr->root        = NodeNew();
+    aktr->db_filename = strdup(db_filename);
 
     int32_t fd = open(db_filename, 0);
     
@@ -43,7 +44,13 @@ void AkinatorCtor(Akinator *aktr, const char *db_filename, int *err)
 
 void AkinatorDtor(Akinator *aktr)
 {
+    ASSERT(aktr != NULL);
+
     TreeDtor(aktr->root);
+    free(aktr->db_filename);
+
+    aktr->root        = NULL;
+    aktr->db_filename = NULL;
 }
 
 void AkinatorPredict(Akinator *aktr)
@@ -279,6 +286,37 @@ void AkinatorDescribe(Akinator *aktr, const char *obj)
     AkinatorPrintByPath (aktr->root, &stk);
 
     StackDtor(&stk);
+}
+
+void AkinatorSaveDbToFile(Akinator *aktr)
+{
+    int32_t fd = creat(aktr->db_filename, S_IRWXU);
+
+    ASSERT(fd != -1);
+    AkinatorSaveDfs(aktr->root, 0, fd);
+
+    close(fd);
+}
+
+void AkinatorSaveDfs(Node *node, int32_t depth, int32_t fd)
+{
+    ASSERT(node != NULL);
+
+    for (int32_t i = 0; i < depth; ++i)
+        dprintf(fd, "\t");
+    dprintf(fd, "{ \"%s\" ", node->str);
+
+    if (!NodeIsLeaf(node))
+    {
+        dprintf(fd, "\n");
+        AkinatorSaveDfs(node->left,  depth + 1, fd);
+        AkinatorSaveDfs(node->right, depth + 1, fd);
+
+        for (int32_t i = 0; i < depth; ++i)
+            dprintf(fd, "\t");
+    }
+
+    dprintf(fd, "}\n");
 }
 
 bool GetAnsYesNo()

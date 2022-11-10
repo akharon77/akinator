@@ -74,6 +74,7 @@ int main(int argc, const char *argv[])
     }
     printf("\n");
 
+    AkinatorSaveDbToFile(&aktr);
     AkinatorDtor(&aktr);
     
     return 0;
