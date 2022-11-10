@@ -14,10 +14,11 @@
 
 const Option EXEC_OPTIONS[] = 
     {
-        {"--db",      "-f",  DB_FILE_OPTION, "use database from file (default: input.asm)"},
-        {"--predict", "-p",  PREDICT_OPTION, "prediction mode"},
-        {"--compare", "-c",  COMPARE_OPTION, "comparison mode"},
-        {"--help",    "-h",  HELP_OPTION,    "show help"}
+        {"--db",       "-f",  DB_FILE_OPTION,  "use database from file (default: input.asm)"},
+        {"--predict",  "-p",  PREDICT_OPTION,  "prediction mode"},
+        {"--compare",  "-c",  COMPARE_OPTION,  "comparison mode"},
+        {"--describe", "-d",  DESCRIBE_OPTION, "description mode"},
+        {"--help",     "-h",  HELP_OPTION,     "show help"}
     };
  
 const size_t N_EXEC_OPTIONS = sizeof(EXEC_OPTIONS) / sizeof(Option);
@@ -122,20 +123,20 @@ void AkinatorCompare(Akinator *aktr, const char *obj1, const char *obj2)
 
         bool step = StackTop(&stk1);
 
-        StackPop(&stk2);
+        StackPop(&stk1);
         StackPop(&stk2);
 
         if (step)
         {
-            printf("not ");
             vertex = vertex->right;
         }
         else
         {
+            printf("not ");
             vertex = vertex->left;
         }
 
-        printf("%s, ", vertex->str);
+        printf("%s, ", str);
     }
 
     printf("but %s ", obj1);
@@ -177,7 +178,7 @@ bool AkinatorFindObj(Node *node, const char *str, Stack *stk)
     ASSERT(str  != NULL);
     ASSERT(stk  != NULL);
 
-    if (strcasecmp(str, node->str))
+    if (strcasecmp(str, node->str) == 0)
         return true;
     if (NodeIsLeaf(node))
         return false;
@@ -266,6 +267,18 @@ void AkinatorParseText(Akinator *aktr, TextInfo *text)
 
     StackDtor(&stk_quot);
     StackDtor(&stk_stat);
+}
+
+void AkinatorDescribe(Akinator *aktr, const char *obj)
+{
+    Stack stk = {};
+    StackCtor(&stk, 64);
+
+    printf("%s is ", obj);
+    AkinatorFindObj     (aktr->root, obj, &stk);
+    AkinatorPrintByPath (aktr->root, &stk);
+
+    StackDtor(&stk);
 }
 
 bool GetAnsYesNo()

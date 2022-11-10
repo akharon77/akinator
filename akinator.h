@@ -11,6 +11,7 @@ enum OPTIONS
     HELP_OPTION,
     PREDICT_OPTION,
     COMPARE_OPTION,
+    DESCRIBE_OPTION,
     N_OPTIONS
 };
 
@@ -36,6 +37,7 @@ void AkinatorDtor        (Akinator *aktr);
 
 void AkinatorPredict     (Akinator *aktr);
 void AkinatorCompare     (Akinator *aktr, const char *obj1, const char *obj2);
+void AkinatorDescribe    (Akinator *aktr, const char *obj);
 
 void AkinatorPrintByPath (Node *node, Stack *stk);
 bool AkinatorFindObj     (Node *node, const char *str, Stack *stk);

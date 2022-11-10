@@ -29,6 +29,13 @@ int main(int argc, const char *argv[])
 
     if (options[PREDICT_OPTION])
         run_mode = PREDICT_OPTION;
+    if (options[DESCRIBE_OPTION])
+    {
+        run_mode = DESCRIBE_OPTION;
+
+        ASSERT(options[DESCRIBE_OPTION] + 1 < argc);
+        obj1     = argv[options[DESCRIBE_OPTION] + 1];
+    }
     if (options[COMPARE_OPTION])
     {
         run_mode = COMPARE_OPTION;
@@ -51,11 +58,13 @@ int main(int argc, const char *argv[])
     Akinator aktr = {};
     AkinatorCtor(&aktr, db_filename, &err);
 
-lololo:
     switch (run_mode)
     {
         case PREDICT_OPTION:
             AkinatorPredict(&aktr);
+            break;
+        case DESCRIBE_OPTION:
+            AkinatorDescribe(&aktr, obj1);
             break;
         case COMPARE_OPTION:
             AkinatorCompare(&aktr, obj1, obj2);
@@ -63,8 +72,7 @@ lololo:
         default:
             printf(RED "Nothing to do" NORMAL);
     }
-
-    goto lololo;
+    printf("\n");
 
     AkinatorDtor(&aktr);
     
