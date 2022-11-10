@@ -212,7 +212,7 @@ void AkinatorParseText(Akinator *aktr, TextInfo *text)
         switch (text->base[i])
         {
             case '{':
-                switch (StacPop(&stk_stat))
+                switch (StackPop(&stk_stat))
                 {
                     case VERTEX_IN:
                         {
@@ -254,7 +254,7 @@ void AkinatorParseText(Akinator *aktr, TextInfo *text)
                     int32_t quot_r = StackPop(&stk_quot);
                     int32_t quot_l = StackPop(&stk_quot);
 
-                    vertex.str = strndup(text->base + i + 1, quot_r - quot_l - 1);
+                    vertex->str = strndup(text->base + quot_l + 1, quot_r - quot_l - 1);
                     vertex = vertex->ancstr;
                 }
                 break;
@@ -266,10 +266,6 @@ void AkinatorParseText(Akinator *aktr, TextInfo *text)
 
     StackDtor(&stk_quot);
     StackDtor(&stk_stat);
-
-    TextInfoDtor(&text);
-
-    close(fd);
 }
 
 bool GetAnsYesNo()

@@ -187,7 +187,7 @@ int64_t StackGetCoeff(Stack *stk)
     return 2; // TODO: formula
 }
 
-static const char* StackGetStatus(Stack *stk)
+const char* StackGetStatus(Stack *stk)
 {
     ASSERT(!isBadPtr(stk));
 

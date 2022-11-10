@@ -151,3 +151,4 @@ void InitErrorTags()
     for (int i = 0; i < N_ERRORS; ++i)
         ERRORS[ERROR_TAGS[i].errorId] = ERROR_TAGS[i].description;
 }
+

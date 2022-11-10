@@ -42,6 +42,6 @@ bool AkinatorFindObj     (Node *node, const char *str, Stack *stk);
 
 void AkinatorParseText   (Akinator *aktr, TextInfo *text);
 
-char GetAnsYesNo();
+bool GetAnsYesNo();
 
 #endif  // AKINATOR_H

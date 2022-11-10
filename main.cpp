@@ -1,11 +1,13 @@
 #include <stdio.h>
+
 #include "akinator.h"
+#include "colors.h"
 
 int main(int argc, const char *argv[])
 {
     int err = 0;
 
-    int run_mode = HELP;
+    int run_mode = HELP_OPTION;
     const char *db_filename = "akinator_db.txt",
                *obj1        = "null1",
                *obj2        = "null2";
@@ -20,7 +22,7 @@ int main(int argc, const char *argv[])
     }
 
     if (options[DB_FILE_OPTION])
-        db_filename = argv[options[INPUT_FILE_OPTION] + 1];
+        db_filename = argv[options[DB_FILE_OPTION] + 1];
 
     if (options[HELP_OPTION])
         run_mode = HELP_OPTION;
@@ -36,23 +38,33 @@ int main(int argc, const char *argv[])
         obj2     = argv[options[COMPARE_OPTION] + 2];
     }
 
-    Akinator aktr = {};
-    AkinatorCtor(&aktr, db_filename);
+    if (run_mode == HELP_OPTION)
+    {
+        for (int32_t i = 0; i < N_EXEC_OPTIONS; ++i)
+            printf("%10s %5s %s\n",
+                    EXEC_OPTIONS[i].strFormLong,
+                    EXEC_OPTIONS[i].strFormShort,
+                    EXEC_OPTIONS[i].description);
+        return 0;
+    }
 
+    Akinator aktr = {};
+    AkinatorCtor(&aktr, db_filename, &err);
+
+lololo:
     switch (run_mode)
     {
-        case PREDICT:
+        case PREDICT_OPTION:
             AkinatorPredict(&aktr);
             break;
-        case COMPARE:
+        case COMPARE_OPTION:
             AkinatorCompare(&aktr, obj1, obj2);
-            break;
-        case HELP:
-            OptionsPrintHelp();
             break;
         default:
             printf(RED "Nothing to do" NORMAL);
     }
+
+    goto lololo;
 
     AkinatorDtor(&aktr);
     

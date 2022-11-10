@@ -4,7 +4,7 @@
 #include "stack_debug.h"
 #include "stack_prot.h"
 
-#define Elem int32_t
+#define Elem int64_t
 
 struct Stack
 {
