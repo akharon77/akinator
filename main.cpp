@@ -58,6 +58,8 @@ int main(int argc, const char *argv[])
     Akinator aktr = {};
     AkinatorCtor(&aktr, db_filename, &err);
 
+    AkinatorDumpToFile(&aktr, "dump/dump1.svg");
+
     switch (run_mode)
     {
         case PREDICT_OPTION:
@@ -75,6 +77,9 @@ int main(int argc, const char *argv[])
     printf("\n");
 
     AkinatorSaveDbToFile(&aktr);
+
+    AkinatorDumpToFile(&aktr, "dump/dump2.svg");
+
     AkinatorDtor(&aktr);
     
     return 0;

@@ -1,0 +1,15 @@
+digraph G {
+node0[shape=polygon, label="looks like a worm"];
+node0->node1[label="no"];node1[shape=polygon, label="looks like a rat"];
+node1->node3[label="no"];node3[shape=polygon, label="loves water"];
+node3->node7[label="no"];node7[shape=polygon, label="Charmander"];
+node3->node8[label="yes"];node8[shape=polygon, label="Squirtle"];
+node1->node4[label="yes"];node4[shape=polygon, label="colour purple"];
+node4->node9[label="no"];node9[shape=polygon, label="Pikachu"];
+node4->node10[label="yes"];node10[shape=polygon, label="big ears"];
+node10->node21[label="no"];node21[shape=polygon, label="Rattata"];
+node10->node22[label="yes"];node22[shape=polygon, label="Nidoran"];
+node0->node2[label="yes"];node2[shape=polygon, label="colour brown"];
+node2->node5[label="no"];node5[shape=polygon, label="Caterpie"];
+node2->node6[label="yes"];node6[shape=polygon, label="Weedle"];
+}

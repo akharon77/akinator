@@ -1,19 +1,19 @@
-{ "looks like a worm"
-    { "looks like a rat"
-        { "loves water" 
-            { "Charmander" }
-            { "Squirtle" }
-        }
-        { "colour purple"
-            { "Pikachu" }
-            { "big ears"
-                { "Rattata" }
-                { "Nidoran" }
-            }
-        }
-    }
-    { "colour brown"
-        { "Caterpie" }
-        { "Weedle" }  
-    }
-} 
+{ "looks like a worm" 
+	{ "looks like a rat" 
+		{ "loves water" 
+			{ "Charmander" }
+			{ "Squirtle" }
+		}
+		{ "colour purple" 
+			{ "Pikachu" }
+			{ "big ears" 
+				{ "Rattata" }
+				{ "Nidoran" }
+			}
+		}
+	}
+	{ "colour brown" 
+		{ "Caterpie" }
+		{ "Weedle" }
+	}
+}

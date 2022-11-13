@@ -340,3 +340,36 @@ bool GetAnsYesNo()
     }
 }
 
+void AkinatorDumpToFile(Akinator *aktr, const char *filename)
+{
+    ASSERT(aktr != NULL);
+
+    int32_t fd = creat("dump/akinator_dump.txt", S_IRWXU);
+    ASSERT(fd != -1);
+
+    dprintf(fd, "digraph G {\n");
+    AkinatorDumpToFileDfs(aktr->root, fd, 0);
+    dprintf(fd, "}\n");
+
+    close(fd);
+
+    char cmd[256] = "";
+    sprintf(cmd, "dot dump/akinator_dump.txt -o %s -Tsvg", filename);
+    system(cmd);
+}
+
+void AkinatorDumpToFileDfs(Node *node, int32_t fd, int64_t idx)
+{
+    dprintf(fd, "node%ld[shape=polygon, label=\"%s\"];\n",
+                idx, node->str);
+
+    if (!NodeIsLeaf(node))
+    {
+        dprintf(fd, "node%ld->node%ld[label=\"no\"];", idx, 2 * idx + 1);
+        AkinatorDumpToFileDfs(node->left,  fd, 2 * idx + 1);
+
+        dprintf(fd, "node%ld->node%ld[label=\"yes\"];", idx, 2 * idx + 2);
+        AkinatorDumpToFileDfs(node->right, fd, 2 * idx + 2);
+    }
+}
+

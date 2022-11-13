@@ -34,19 +34,22 @@ struct Akinator
     char *db_filename;
 };
 
-void AkinatorCtor         (Akinator *aktr, const char *db_filename, int *err);
-void AkinatorDtor         (Akinator *aktr);
+void AkinatorCtor          (Akinator *aktr, const char *db_filename, int *err);
+void AkinatorDtor          (Akinator *aktr);
 
-void AkinatorPredict      (Akinator *aktr);
-void AkinatorCompare      (Akinator *aktr, const char *obj1, const char *obj2);
-void AkinatorDescribe     (Akinator *aktr, const char *obj);
+void AkinatorPredict       (Akinator *aktr);
+void AkinatorCompare       (Akinator *aktr, const char *obj1, const char *obj2);
+void AkinatorDescribe      (Akinator *aktr, const char *obj);
 
-void AkinatorPrintByPath  (Node *node, Stack *stk);
-bool AkinatorFindObj      (Node *node, const char *str, Stack *stk);
+void AkinatorPrintByPath   (Node *node, Stack *stk);
+bool AkinatorFindObj       (Node *node, const char *str, Stack *stk);
 
-void AkinatorParseText    (Akinator *aktr, TextInfo *text);
-void AkinatorSaveDbToFile (Akinator *aktr);
-void AkinatorSaveDfs      (Node *node, int32_t depth, int32_t fd);
+void AkinatorParseText     (Akinator *aktr, TextInfo *text);
+void AkinatorSaveDbToFile  (Akinator *aktr);
+void AkinatorSaveDfs       (Node *node, int32_t depth, int32_t fd);
+
+void AkinatorDumpToFile    (Akinator *aktr, const char *filename);
+void AkinatorDumpToFileDfs (Node *node, int32_t fd, int64_t idx);
 
 bool GetAnsYesNo();
 

@@ -9,13 +9,15 @@ void TreeDtor(Node *vertex)
 {
     ASSERT(vertex != NULL);
 
+    free(vertex->str);
+
     if (!NodeIsLeaf(vertex))
     {
         TreeDtor(vertex->left);
         TreeDtor(vertex->right);
     }
 
-    free(vertex->str);
+    free(vertex);
 }
 
 void NodeCtor(Node *node, const char *str)
