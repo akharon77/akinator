@@ -1,11 +1,20 @@
 { "looks like a worm" 
 	{ "looks like a rat" 
 		{ "loves water" 
-			{ "Is" 
-				{ "Charmander" }
+			{ "is a cat" 
+				{ "loves fire" 
+					{ "Ponyta" }
+					{ "Charmander" }
+				}
 				{ "Poltorashka" }
 			}
-			{ "Squirtle" }
+			{ "doesn't have a shell" 
+				{ "Squirtle" }
+				{ "loves programming" 
+					{ "Wombat" }
+					{ "Ded32" }
+				}
+			}
 		}
 		{ "colour purple" 
 			{ "Pikachu" }

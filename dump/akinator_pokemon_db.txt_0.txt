@@ -2,8 +2,16 @@ digraph G {
 node0[shape=polygon, label="looks like a worm"];
 node0->node1[label="no"];node1[shape=polygon, label="looks like a rat"];
 node1->node3[label="no"];node3[shape=polygon, label="loves water"];
-node3->node7[label="no"];node7[shape=polygon, label="Charmander"];
-node3->node8[label="yes"];node8[shape=polygon, label="Squirtle"];
+node3->node7[label="no"];node7[shape=polygon, label="is a cat"];
+node7->node15[label="no"];node15[shape=polygon, label="loves fire"];
+node15->node31[label="no"];node31[shape=polygon, label="Ponyta"];
+node15->node32[label="yes"];node32[shape=polygon, label="Charmander"];
+node7->node16[label="yes"];node16[shape=polygon, label="Poltorashka"];
+node3->node8[label="yes"];node8[shape=polygon, label="doesn't have a shell"];
+node8->node17[label="no"];node17[shape=polygon, label="Squirtle"];
+node8->node18[label="yes"];node18[shape=polygon, label="loves programming"];
+node18->node37[label="no"];node37[shape=polygon, label="Wombat"];
+node18->node38[label="yes"];node38[shape=polygon, label="Ded32"];
 node1->node4[label="yes"];node4[shape=polygon, label="colour purple"];
 node4->node9[label="no"];node9[shape=polygon, label="Pikachu"];
 node4->node10[label="yes"];node10[shape=polygon, label="big ears"];

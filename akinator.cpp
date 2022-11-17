@@ -83,15 +83,21 @@ void AkinatorPredict(Akinator *aktr)
     }
     else
     {
-        char obj     [MAX_STR_OBJ_LEN] = "", 
-             property[MAX_STR_OBJ_LEN] = "";
+        char *obj      = NULL, 
+             *property = NULL;
+
+        size_t len = 0;
 
         AkinatorEchoAndSay("What's a pity! Please, tell me, who it was. It was ... ");
-        scanf("%s", obj);
+
+        getline(&obj, &len, stdin);
+        *strchr(obj, '\n') = '\0';
 
         AkinatorEchoAndSay("Please, tell me, %s differs from %s in that %s ... ", obj, vertex->str, obj);
-        scanf("%s", property);
-        property[0] = toupper(property[0]);
+
+        len = 0;
+        getline(&property, &len, stdin);
+        *strchr(property, '\n') = '\0';
 
         Node *node_left  = NodeNew(),
              *node_right = NodeNew();
@@ -101,10 +107,12 @@ void AkinatorPredict(Akinator *aktr)
 
         *vertex = 
             {
-                .str   = strdup(property),
+                .str   = property,
                 .left  = node_left,
                 .right = node_right
             };
+
+        free(obj);
     }
 }
 
@@ -394,6 +402,7 @@ bool GetAnsYesNo()
     while (true)
     {
         ans = getchar();
+        ClearInput();
 
         switch (tolower(ans))
         {
@@ -407,7 +416,6 @@ bool GetAnsYesNo()
                 printf(RED "Wrong answer. " NORMAL "Enter [y/n] ");
         }
 
-        ClearInput();
     }
 }
 
