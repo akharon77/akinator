@@ -29,6 +29,8 @@ int main(int argc, const char *argv[])
 
     if (options[PREDICT_OPTION])
         run_mode = PREDICT_OPTION;
+    if (options[LIST_OPTION])
+        run_mode = LIST_OPTION;
     if (options[DESCRIBE_OPTION])
     {
         run_mode = DESCRIBE_OPTION;
@@ -58,7 +60,7 @@ int main(int argc, const char *argv[])
     Akinator aktr = {};
     AkinatorCtor(&aktr, db_filename, &err);
 
-    AkinatorDumpToFile(&aktr, "dump/dump1.svg");
+    AkinatorDump(&aktr);
 
     switch (run_mode)
     {
@@ -71,6 +73,9 @@ int main(int argc, const char *argv[])
         case COMPARE_OPTION:
             AkinatorCompare(&aktr, obj1, obj2);
             break;
+        case LIST_OPTION:
+            AkinatorPrintList(&aktr);
+            break;
         default:
             printf(RED "Nothing to do" NORMAL);
     }
@@ -78,7 +83,7 @@ int main(int argc, const char *argv[])
 
     AkinatorSaveDbToFile(&aktr);
 
-    AkinatorDumpToFile(&aktr, "dump/dump2.svg");
+    AkinatorDump(&aktr);
 
     AkinatorDtor(&aktr);
     

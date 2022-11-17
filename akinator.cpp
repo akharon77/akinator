@@ -18,6 +18,7 @@ const Option EXEC_OPTIONS[] =
         {"--predict",  "-p",  PREDICT_OPTION,  "prediction mode"},
         {"--compare",  "-c",  COMPARE_OPTION,  "comparison mode"},
         {"--describe", "-d",  DESCRIBE_OPTION, "description mode"},
+        {"--list",     "-l",  LIST_OPTION,     "print list of all objects"},
         {"--help",     "-h",  HELP_OPTION,     "show help"}
     };
  
@@ -29,6 +30,7 @@ void AkinatorCtor(Akinator *aktr, const char *db_filename, int *err)
     aktr->db_filename = strdup(db_filename);
 
     int32_t fd = open(db_filename, 0);
+    ASSERT(fd != -1);
     
     TextInfo text = {};
     TextInfoCtor(&text);
@@ -62,7 +64,8 @@ void AkinatorPredict(Akinator *aktr)
 
     while (!NodeIsLeaf(vertex))
     {
-        printf("%s? [y/n] ", vertex->str);
+        AkinatorEchoAndSay(buf_str, "%s? [y/n] ", vertex->str);
+
         ans = GetAnsYesNo();
 
         if (ans)
@@ -71,22 +74,22 @@ void AkinatorPredict(Akinator *aktr)
             vertex = vertex->left;
     }
 
-    printf("Is it %s? [y/n] ", vertex->str);
+    AkinatorEchoAndSay("Is it %s? [y/n] ", vertex->str);
     ans = GetAnsYesNo();
 
     if (ans)
     {
-        printf("I knew it!");
+        AkinatorEchoAndSay("I knew it!");
     }
     else
     {
         char obj     [MAX_STR_OBJ_LEN] = "", 
              property[MAX_STR_OBJ_LEN] = "";
 
-        printf("What's a pity! Please, tell me, who it was. It was ... ");
+        AkinatorEchoAndSay("What's a pity! Please, tell me, who it was. It was ... ");
         scanf("%s", obj);
 
-        printf("Please, tell me, %s differs from %s in that %s ... ", obj, vertex->str, obj);
+        AkinatorEchoAndSay("Please, tell me, %s differs from %s in that %s ... ", obj, vertex->str, obj);
         scanf("%s", property);
         property[0] = toupper(property[0]);
 
@@ -117,9 +120,9 @@ void AkinatorCompare(Akinator *aktr, const char *obj1, const char *obj2)
          path2 = AkinatorFindObj(aktr->root, obj2, &stk2);
 
     if (!path1 || !path2)
-        printf("I do not know what you are asking me about\n");
+        AkinatorEchoAndSay("I do not know what you are asking me about\n");
 
-    printf("%s is similar to %s in that they are both ", obj1, obj2);
+    AkinatorEchoAndSay("%s is similar to %s in that they are both ", obj1, obj2);
 
     Node *vertex = aktr->root;
 
@@ -139,17 +142,17 @@ void AkinatorCompare(Akinator *aktr, const char *obj1, const char *obj2)
         }
         else
         {
-            printf("not ");
+            AkinatorEchoAndSay("not ");
             vertex = vertex->left;
         }
 
-        printf("%s, ", str);
+        AkinatorEchoAndSay("%s, ", str);
     }
 
-    printf("but %s ", obj1);
+    AkinatorEchoAndSay("but %s ", obj1);
     AkinatorPrintByPath(vertex, &stk1);
     
-    printf("and %s ", obj2);
+    AkinatorEchoAndSay("and %s ", obj2);
     AkinatorPrintByPath(vertex, &stk2);
 
     StackDtor(&stk1);
@@ -171,11 +174,11 @@ void AkinatorPrintByPath(Node *node, Stack *stk)
         }
         else
         {
-            printf("not ");
+            AkinatorEchoAndSay("not ");
             node = node->left;
         }
 
-        printf("%s, ", str);
+        AkinatorEchoAndSay("%s, ", str);
     }
 }
 
@@ -204,6 +207,7 @@ bool AkinatorFindObj(Node *node, const char *str, Stack *stk)
     return false;
 }
 
+// finite-state machine
 void AkinatorParseText(Akinator *aktr, TextInfo *text)
 {
     Stack stk_quot = {},
@@ -281,7 +285,7 @@ void AkinatorDescribe(Akinator *aktr, const char *obj)
     Stack stk = {};
     StackCtor(&stk, 64);
 
-    printf("%s is ", obj);
+    AkinatorEchoAndSay("%s is ", obj);
     AkinatorFindObj     (aktr->root, obj, &stk);
     AkinatorPrintByPath (aktr->root, &stk);
 
@@ -340,11 +344,19 @@ bool GetAnsYesNo()
     }
 }
 
-void AkinatorDumpToFile(Akinator *aktr, const char *filename)
+void AkinatorDump(Akinator *aktr)
 {
-    ASSERT(aktr != NULL);
+    ASSERT(aktr     != NULL);
 
-    int32_t fd = creat("dump/akinator_dump.txt", S_IRWXU);
+    static int32_t cnt = 0;
+
+    char filename_txt[256] = "",
+         filename_svg[256] = "";
+
+    sprintf(filename_txt, "dump/akinator_%s_%d.txt", aktr->db_filename, cnt);
+    sprintf(filename_svg, "dump/akinator_%s_%d.svg", aktr->db_filename, cnt++);
+
+    int32_t fd = creat(filename_txt, S_IRWXU);
     ASSERT(fd != -1);
 
     dprintf(fd, "digraph G {\n");
@@ -354,7 +366,7 @@ void AkinatorDumpToFile(Akinator *aktr, const char *filename)
     close(fd);
 
     char cmd[256] = "";
-    sprintf(cmd, "dot dump/akinator_dump.txt -o %s -Tsvg", filename);
+    sprintf(cmd, "dot %s -o %s -Tsvg", filename_txt, filename_svg);
     system(cmd);
 }
 
@@ -373,3 +385,24 @@ void AkinatorDumpToFileDfs(Node *node, int32_t fd, int64_t idx)
     }
 }
 
+void AkinatorPrintList(Akinator *aktr)
+{
+    int32_t cnt = 0;
+    AkinatorPrintListDfs(aktr->root, &cnt);
+}
+
+void AkinatorPrintListDfs(Node *node, int32_t *cnt)
+{
+    ASSERT(node != NULL);
+    ASSERT(cnt  != NULL);
+
+    if (!NodeIsLeaf(node))
+    {
+        AkinatorPrintListDfs(node->left,  cnt);
+        AkinatorPrintListDfs(node->right, cnt);
+    }
+    else
+    {
+        printf("%d. %s\n", (*cnt)++, node->str);
+    }
+}
