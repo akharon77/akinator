@@ -128,7 +128,10 @@ void AkinatorCompare(Akinator *aktr, const char *obj1, const char *obj2)
          path2 = AkinatorFindObj(aktr->root, obj2, &stk2);
 
     if (!path1 || !path2)
+    {
         AkinatorEchoAndSay("I do not know what you are asking me about\n");
+        return;
+    }
 
     AkinatorEchoAndSay("%s is similar to %s in that they are both ", obj1, obj2);
 
@@ -294,7 +297,11 @@ void AkinatorDescribe(Akinator *aktr, const char *obj)
     StackCtor(&stk, 64);
 
     AkinatorEchoAndSay("%s ", obj);
-    AkinatorFindObj     (aktr->root, obj, &stk);
+    if (!AkinatorFindObj(aktr->root, obj, &stk))
+    {
+        AkinatorEchoAndSay("I do not know what you are asking me about\n");
+        return;
+    }
     AkinatorPrintByPath (aktr->root, &stk);
 
     StackDtor(&stk);
