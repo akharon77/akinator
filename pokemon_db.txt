@@ -1,7 +1,10 @@
 { "looks like a worm" 
 	{ "looks like a rat" 
 		{ "loves water" 
-			{ "Charmander" }
+			{ "Is" 
+				{ "Charmander" }
+				{ "Poltorashka" }
+			}
 			{ "Squirtle" }
 		}
 		{ "colour purple" 

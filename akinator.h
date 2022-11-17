@@ -70,5 +70,6 @@ void AkinatorPrintList     (Akinator *aktr);
 void AkinatorPrintListDfs  (Node *node, int32_t *cnt);
 
 bool GetAnsYesNo();
+bool ClearInput();
 
 #endif  // AKINATOR_H

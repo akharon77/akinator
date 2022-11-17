@@ -64,7 +64,7 @@ void AkinatorPredict(Akinator *aktr)
 
     while (!NodeIsLeaf(vertex))
     {
-        AkinatorEchoAndSay(buf_str, "%s? [y/n] ", vertex->str);
+        AkinatorEchoAndSay("%s? ", vertex->str);
 
         ans = GetAnsYesNo();
 
@@ -74,7 +74,7 @@ void AkinatorPredict(Akinator *aktr)
             vertex = vertex->left;
     }
 
-    AkinatorEchoAndSay("Is it %s? [y/n] ", vertex->str);
+    AkinatorEchoAndSay("Is it %s? ", vertex->str);
     ans = GetAnsYesNo();
 
     if (ans)
@@ -285,7 +285,7 @@ void AkinatorDescribe(Akinator *aktr, const char *obj)
     Stack stk = {};
     StackCtor(&stk, 64);
 
-    AkinatorEchoAndSay("%s is ", obj);
+    AkinatorEchoAndSay("%s ", obj);
     AkinatorFindObj     (aktr->root, obj, &stk);
     AkinatorPrintByPath (aktr->root, &stk);
 
@@ -321,27 +321,6 @@ void AkinatorSaveDfs(Node *node, int32_t depth, int32_t fd)
     }
 
     dprintf(fd, "}\n");
-}
-
-bool GetAnsYesNo()
-{
-    char ans = '\0';
-    while (true)
-    {
-        ans = getc(stdin);
-
-        switch (tolower(ans))
-        {
-            case 'y':
-                return true;
-            case 'n':
-                return false;
-            case '\n':
-                break;
-            default:
-                printf(RED "Wrong answer. " NORMAL "Enter [y/n] ");
-        }
-    }
 }
 
 void AkinatorDump(Akinator *aktr)
@@ -406,3 +385,45 @@ void AkinatorPrintListDfs(Node *node, int32_t *cnt)
         printf("%d. %s\n", (*cnt)++, node->str);
     }
 }
+
+bool GetAnsYesNo()
+{
+    printf("[y/n] ");
+
+    char ans = '\0';
+    while (true)
+    {
+        ans = getchar();
+
+        switch (tolower(ans))
+        {
+            case 'y':
+                return true;
+            case 'n':
+                return false;
+            case '\n':
+                break;
+            default:
+                printf(RED "Wrong answer. " NORMAL "Enter [y/n] ");
+        }
+
+        ClearInput();
+    }
+}
+
+bool ClearInput()
+{
+    bool is_space = true;
+    int temp      = '\0';
+
+    do
+    {
+        temp = getchar();
+        if (temp != ' ' && temp != '\t' && temp != '\n')
+            is_space = false;
+    }
+    while (temp != '\n' && temp != EOF);
+
+    return is_space;
+}
+
