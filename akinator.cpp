@@ -35,7 +35,7 @@ void AkinatorCtor(Akinator *aktr, const char *db_filename, int *err)
     TextInfo text = {};
     TextInfoCtor(&text);
 
-    InputText   (&text, db_filename, err);
+    InputText(&text, db_filename, err);
 
     AkinatorParseText(aktr, &text);
 

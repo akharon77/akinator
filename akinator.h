@@ -44,7 +44,7 @@ do                                                          \
     fflush(stdout);                                         \
                                                             \
     char cmd[256] = "";                                     \
-    sprintf(cmd, "echo \"%s\" | festival --tts", buf_str);  \
+    sprintf(cmd, "espeak \"%s\" -s 200", buf_str);          \
     system(cmd);                                            \
 }                                                           \
 while (0)
